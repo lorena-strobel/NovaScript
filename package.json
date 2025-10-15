@@ -1,0 +1,24 @@
+{
+  "name": "novascript",
+  "version": "1.0.0",
+  "description": "Linguagem baseada em JavaScript",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "antlr4": "antlr4 -Dlanguage=JavaScript NovaScript.g4 -visitor"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lorena-strobel/NovaScript.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lorena-strobel/NovaScript/issues"
+  },
+  "homepage": "https://github.com/lorena-strobel/NovaScript#readme",
+  "dependencies": {
+    "antlr4": "^4.13.2"
+  }
+}
