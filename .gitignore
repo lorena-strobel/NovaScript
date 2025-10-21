@@ -5,3 +5,10 @@ node_modules/
 *.interp
 NovaScriptLexer.java
 NovaScriptParser.java
+
+.venv/
+.env/
+env/
+venv/
+.virtual/
+virtual/
