@@ -1,11 +1,20 @@
 # NovaScript
-Linguagem baseada em JavaScript
+Linguagem baseada em **JavaScript**.
 
 ---
 
 ## Configuração do Ambiente
 **Requisitos:**
 - `Python3`
+- `Node.js`
+
+
+### Instalar pacotes necessários (Node.js)
+```bash
+$ npm install
+```
+
+
 
 ### Iniciar Ambiente Virtual (Python)
 **Unix:**
@@ -35,7 +44,10 @@ ANTLR Parser Generator  Version 4.13.2
 ...
 ```
 
+
+
 ### Analisar com uma gramática de exemplo
+Para testar rapidamente no terminal a gramática:
 > (Obs.): `^D` significa `Ctrl + D` e indica “fim da entrada” no **Unix**; use `^Z` no **Windows**).
 
 ```bash
@@ -43,6 +55,26 @@ $ antlr4-parse NovaScript.g4 programa -tree
 let num = 10;
 ^D
 (prog:1 (expr:2 (expr:3 10) + (expr:1 (expr:3 20) * (expr:3 30))) <EOF>)
+```
+
+
+
+### Gerar os Arquivos do Analisador
+Utilizando o **ANTLR4** para gerar os arquivos **JavaScript** a partir da gramática `NovaScript.g4`. Graças ao script configurado no `package.json`, isso facilita consideravelmente.
+
+```bash
+$ npm run antlr4
+```
+
+
+
+### Executar e Testar
+```bash
+$ node main.js examples/teste.ns
+
+Iniciando análise...
+Análise concluída com sucesso.
+(programa (statement (declaracao let (lista_atrib a = (expressao (expmat (termo (fator (numero 10))))))) ;) (statement (declaracao let (lista_atrib b = (expressao (expmat (termo (fator (numero 20))))))) ;) (statement (declaracao let (lista_atrib resultado = (expressao (expmat (termo (fator (numero a))) + (termo (fator (numero b))))))) ;) (statement (escrever console.log ( (concatenacao_log (elemento_log "O resultado da soma é: ") + (elemento_log (expressao (expmat (termo (fator (numero resultado))))))) )) ;))
 ```
 
 ---
