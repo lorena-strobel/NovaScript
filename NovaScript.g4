@@ -1,7 +1,13 @@
 grammar NovaScript;
 
 programa
-    : lista*
+    : statement*
+    ;
+
+statement
+    : (declaracao | escrever | ler | atribuicao) ';'?
+    | condicional
+    | laco
     ;
 
 lista
@@ -10,11 +16,11 @@ lista
     | ler
     | condicional
     | laco
-    | atrib_expr
+    | atribuicao
     ;
 
 declaracao 
-    : 'let' lista_atrib ';'
+    : 'let' lista_atrib
     ;
 
 lista_atrib
@@ -26,9 +32,9 @@ lista_id
     ;
 
 ler
-    : 'let' ID '=' funcao_conversao 'prompt' '(' STRING ')' ';'
-    | 'let' ID '=' 'prompt' '(' STRING ')' ';'
-    |'prompt' '(' STRING ')' ';'
+    : 'let' ID '=' funcao_conversao 'prompt' '(' STRING ')'
+    | 'let' ID '=' 'prompt' '(' STRING ')'
+    |'prompt' '(' STRING ')'
     ;
     
 funcao_conversao
@@ -38,7 +44,7 @@ funcao_conversao
     ;
 
 escrever
-    : 'console.log' '(' concatenacao_log* ')' ';'
+    : 'console.log' '(' concatenacao_log* ')'
     ;
     
 concatenacao_log
@@ -82,7 +88,7 @@ se
     ;
 
 laco
-    : 'do' '{' bloco '}' 'while' '(' condicao ')' ';'
+    : 'do' '{' bloco '}' 'while' '(' condicao ')' ';'?
     | 'for' '(' inicio ';' condicao ';' final? ')' '{' bloco '}' 
     | 'while' '(' condicao ')' '{' bloco '}'
     ;
@@ -98,12 +104,11 @@ final
     ;
 
 bloco
-    : lista*
+    : statement*
     ;
 
-atrib_expr
-    : 'let' ID '=' expressao
-    | ID ('++' | '--') (';' | ')')
+atribuicao
+    : ID ('=' expressao | '++' | '--')
     ;
 
 condicao

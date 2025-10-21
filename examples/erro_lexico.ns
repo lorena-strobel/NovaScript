@@ -1,0 +1,2 @@
+let valor = 100;
+let total = valor @ 5;
