@@ -2,6 +2,7 @@
   "name": "novascript",
   "version": "1.0.0",
   "description": "Linguagem baseada em JavaScript",
+  "type": "module",
   "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
