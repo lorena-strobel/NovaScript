@@ -1,2 +1,7 @@
 .dist/
 node_modules/
+.antlr/
+*.tokens
+*.interp
+NovaScriptLexer.java
+NovaScriptParser.java
