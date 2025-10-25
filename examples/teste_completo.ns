@@ -1,0 +1,11 @@
+let i = 0
+let max = 5
+
+while (i < max) {
+    if (i == 2) {
+        console.log("Encontrei o 2")
+    } else {
+        console.log("Iteração: " + i)
+    }
+    i++
+}
