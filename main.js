@@ -3,8 +3,10 @@ import antlr4 from 'antlr4';
 import NovaScriptLexer from './NovaScriptLexer.js';
 import NovaScriptParser from './NovaScriptParser.js';
 import NovaScriptErrorListener from './NovaScriptErrorListener.js';
+import AstBuilderVisitor from './AstBuilderVisitor.js';
 
 
+// Leitura arquivo e configuração Parser
 const filePath = process.argv[2];
 if (!filePath) {
     console.log("Por favor, forneça o caminha para o arquivo .ns");
@@ -31,9 +33,19 @@ parser.buildParseTrees = true;
 // Inicia a análise
 try {
     console.log("Iniciando análise...");
-    const tree = parser.programa();
+    const tree = parser.programa();     // Árvore de Parse Concreta
     console.log("Análise concluída com sucesso.");
-    console.log(tree.toStringTree(parser.ruleNames));
+
+    
+    // --- CONSTRUÇÃO DA AST ---
+
+    console.log("Construindo a Árvore Sintática Abstrata (AST)...");
+    const AstBuilder = new AstBuilderVisitor();
+    const ast = AstBuilder.visit(tree); // AST
+
+    console.log("AST construída com sucesso.");
+
+    console.log(JSON.stringify(ast, null, 4));
 } catch (e) {
-    console.error("Uma exceção interrompeu a análise.");
+    console.error("Uma exceção interrompeu a análise.", e);
 }
