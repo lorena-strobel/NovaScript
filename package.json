@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/lorena-strobel/NovaScript#readme",
   "dependencies": {
-    "antlr4": "^4.13.2"
+    "antlr4": "^4.13.2",
+    "path": "^0.12.7"
   }
 }

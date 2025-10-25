@@ -5,9 +5,13 @@ programa
     ;
 
 statement
-    : (declaracao | escrever | ler | atribuicao) ';'?
+    : (declaracao | expressionStatement | escrever | ler | atribuicao) ';'?
     | condicional
     | laco
+    ;
+
+expressionStatement
+    : atribuicao
     ;
 
 lista

@@ -23,6 +23,15 @@ export default class NovaScriptListener extends antlr4.tree.ParseTreeListener {
 	}
 
 
+	// Enter a parse tree produced by NovaScriptParser#expressionStatement.
+	enterExpressionStatement(ctx) {
+	}
+
+	// Exit a parse tree produced by NovaScriptParser#expressionStatement.
+	exitExpressionStatement(ctx) {
+	}
+
+
 	// Enter a parse tree produced by NovaScriptParser#lista.
 	enterLista(ctx) {
 	}
