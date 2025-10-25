@@ -67,7 +67,7 @@ lexer.removeErrorListeners();
 parser.removeErrorListeners();
 const errorListener = new NovaScriptErrorListener();
 lexer.addErrorListener(errorListener);
-parser.addErrorListener(errorListener);
+parser.addErrorListener(errorListener);     // <- conecta o listener ao Parser
 
 parser.buildParseTrees = true;
 

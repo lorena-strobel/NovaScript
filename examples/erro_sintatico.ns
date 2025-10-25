@@ -1,0 +1,6 @@
+let a = 10
+if (a > 5) {
+    console.log("maior")
+} els {
+    console.log("menor)
+}
