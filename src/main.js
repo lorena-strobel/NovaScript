@@ -2,10 +2,12 @@ import fs from 'fs';
 import path from 'path';
 import antlr4 from 'antlr4';
 import { Graphviz } from '@hpcc-js/wasm';
-import NovaScriptLexer from './NovaScriptLexer.js';
-import NovaScriptParser from './NovaScriptParser.js';
+
+import NovaScriptLexer from '../NovaScriptLexer.js';
+import NovaScriptParser from '../NovaScriptParser.js';
 import NovaScriptErrorListener from './NovaScriptErrorListener.js';
 import AstBuilderVisitor from './AstBuilderVisitor.js';
+import InterpreterVisitor from './interpreter/InterpreterVisitor.js';
 
 
 // --- Função para gerar o arquivo .dot (Graphviz)
@@ -109,6 +111,18 @@ async function main() {
         const svgFilePath = path.join(outputDir, `${baseName}.ast.svg`);
         fs.writeFileSync(svgFilePath, svg);
         console.log(`Imagem SVG da AST salva em: ${svgFilePath}`);
+
+
+        // --- Interpretação ---
+        console.log("\nIniciando execução do programa...");
+        console.log("-----------------------------------");
+
+        const interpreter = new InterpreterVisitor();
+        interpreter.visit(ast);     // <- executa o código
+
+        console.log("-----------------------------------");
+        console.log("Execução concluída.");
+
 
         
         // Imprime AST em formato JSON no terminal

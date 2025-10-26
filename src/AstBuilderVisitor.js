@@ -1,5 +1,5 @@
 import { type } from 'os';
-import NovaScriptVisitor from './NovaScriptVisitor.js';
+import NovaScriptVisitor from '../NovaScriptVisitor.js';
 
 // Classe principal que constrói a AST
 export default class AstBuilderVisitor extends NovaScriptVisitor {
@@ -125,7 +125,7 @@ export default class AstBuilderVisitor extends NovaScriptVisitor {
                     type: 'Identifier',
                     name: 'console.log'
                 },
-                arguments: [this.visit(ctx.concatenacao_log())]
+                arguments: this.visit(ctx.concatenacao_log())
             }
         };
     }
