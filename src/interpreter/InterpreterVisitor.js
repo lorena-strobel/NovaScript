@@ -1,3 +1,6 @@
+import readlineSync from 'readline-sync';
+
+
 export default class InterpreterVisitor {
     constructor() {
         // Tabela de Símbolos: armazena variáveis ("memória")
@@ -69,11 +72,23 @@ export default class InterpreterVisitor {
     }
 
     visitCallExpression(node) {
+        // Lógica para 'console.log('
         if (node.callee.name === 'console.log') {
             const args = node.arguments.map(arg => this.visit(arg));
             console.log(...args);
             return;
         }
+
+        // Lógica para 'prompt()'
+        if (node.callee.name === 'prompt') {
+            const question = node.arguments[0] ? this.visit(node.arguments[0]) : '';
+            const answer = readlineSync.question(question + ' ');
+
+            const num = parseFloat(answer);     // <- tenta converter a resposta para número, se falhar, retorna como string
+            
+            return isNaN(num) ? answer : num;
+        }
+
         throw new Error(`Runtime Error: Função '${node.callee.name}' não reconhecida.`);
     }
 

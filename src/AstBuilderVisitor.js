@@ -86,8 +86,47 @@ export default class AstBuilderVisitor extends NovaScriptVisitor {
 
 
     visitLer(ctx) {
-        // Simplificando a AST para o comando 'ler'
+        // AST para o comando 'ler'
+        const varName = ctx.ID().getText();
         const promptText = ctx.STRING() ? this._text(ctx.STRING()).slice(1, -1) : "";
+
+        // Nó da chamada da função 'prompt()' que aparece na AST
+        const callNode = {
+            type: 'CallExpression',
+            callee: {
+                type: 'Identifier',
+                name: 'prompt'
+            },
+            arguments: [
+                {
+                    type: 'Literal',
+                    value: promptText
+                }
+            ]
+        };
+
+        
+        /* Se a gramática usou 'let', cria-se uma declaração
+         * Senão, criamos uma atribuição (caso a variável já existe)
+         */
+        if (ctx.getText().startsWith('let')) {
+            return {
+                type: 'VariableDeclaration',
+                kind: 'let',
+                declarations: [
+                    {
+                        type: 'VariableDeclarator',
+                        id: {
+                            type: 'Identifier',
+                            name: varName
+                        },
+                        init: callNode
+                    }
+                ]
+            };
+        }
+
+        /* Caso de 'prompt' sem 'let' (atribuição a variável existente) */ // <- aplicação futura?
         return {
             type: 'ExpressionStatement',
             expression: {
@@ -95,21 +134,9 @@ export default class AstBuilderVisitor extends NovaScriptVisitor {
                 operator: '=',
                 left: {
                     type: 'Identifier',
-                    name: this._text(ctx.ID())
+                    name: varName
                 },
-                right: {
-                    type: 'CallExpression',
-                    callee: {
-                        type: 'Identifier',
-                        name: 'prompt'
-                    },
-                    arguments: [
-                        {
-                            type: 'Literal',
-                            value: promptText
-                        }
-                    ]
-                }
+                right: callNode
             }
         };
     }

@@ -1,0 +1,28 @@
+digraph AST {
+  node [shape=box, style="rounded"];
+  0 [label="Program"];
+  1 [label="VariableDeclaration"];
+  0 -> 1;
+  2 [label="VariableDeclarator"];
+  1 -> 2;
+  3 [label="Identifier (a)"];
+  2 -> 3;
+  4 [label="Literal (10)"];
+  2 -> 4;
+  5 [label="VariableDeclaration"];
+  0 -> 5;
+  6 [label="VariableDeclarator"];
+  5 -> 6;
+  7 [label="Identifier (b)"];
+  6 -> 7;
+  8 [label="Literal (20)"];
+  6 -> 8;
+  9 [label="ExpressionStatement"];
+  0 -> 9;
+  10 [label="CallExpression"];
+  9 -> 10;
+  11 [label="Identifier (console.log)"];
+  10 -> 11;
+  12 [label="Literal (Funciona sem ponto e vírgula)"];
+  10 -> 12;
+}

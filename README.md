@@ -54,6 +54,8 @@ Para testar rapidamente no terminal a gramática:
 $ antlr4-parse NovaScript.g4 programa -tree
 let num = 10;
 ^D
+
+// OUTPUT:
 (prog:1 (expr:2 (expr:3 10) + (expr:1 (expr:3 20) * (expr:3 30))) <EOF>)
 ```
 
@@ -70,10 +72,12 @@ $ npm run antlr4
 
 ### Executar e Testar
 ```bash
-$ node main.js examples/teste.ns
+$ node src/main.js examples/teste.ns
 
 Iniciando análise...
 Análise concluída com sucesso.
+
+// OUTPUT:
 (programa (statement (declaracao let (lista_atrib a = (expressao (expmat (termo (fator (numero 10))))))) ;) (statement (declaracao let (lista_atrib b = (expressao (expmat (termo (fator (numero 20))))))) ;) (statement (declaracao let (lista_atrib resultado = (expressao (expmat (termo (fator (numero a))) + (termo (fator (numero b))))))) ;) (statement (escrever console.log ( (concatenacao_log (elemento_log "O resultado da soma é: ") + (elemento_log (expressao (expmat (termo (fator (numero resultado))))))) )) ;))
 ```
 
