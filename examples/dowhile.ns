@@ -1,0 +1,7 @@
+let numero;
+
+do {
+    numero = Number(prompt("Digite um numero positivo:"));
+} while (numero <= 0);
+
+console.log("Número válido: " + numero);

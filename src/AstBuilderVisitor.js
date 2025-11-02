@@ -3,32 +3,52 @@ import NovaScriptVisitor from '../NovaScriptVisitor.js';
 
 // Classe principal que constrói a AST
 export default class AstBuilderVisitor extends NovaScriptVisitor {
-    
+
     // Helper extrair o texto do terminal ou nome Identificador
     _text(ctx) {
         return ctx.getText();
     }
-    
-    
+
+
     // Visita regra 'programa' e retorna uma lista 'statements'
     visitPrograma(ctx) {
+     
         const statement = ctx.statement().map(stmt => this.visit(stmt));
         return {
             type: 'Program',
-            body: statement.filter(s => s !== null)         // filtra statements nulos (ex: ';')
+            body: statement.filter(s => s !== null)   // filtra statements nulos (ex: ';')
         };
     }
 
 
     // Visita 'statement' genérico
     visitStatement(ctx) {
-        if (ctx.declaracao()) return this.visit(ctx.declaracao());
-        if (ctx.escrever()) return this.visit(ctx.escrever());
-        if (ctx.atribuicao()) return this.visit(ctx.atribuicao());
-        if (ctx.condicional()) return this.visit(ctx.condicional());
-        if (ctx.laco()) return this.visit(ctx.laco());
-        if (ctx.ler()) return this.visit(ctx.ler());
+
+        if (ctx.declaracao()) {
+            return this.visit(ctx.declaracao());
+        }
+        if (ctx.escrever()) {
+            return this.visit(ctx.escrever());
+        }
+        if (ctx.atribuicao()) {
+            return this.visit(ctx.atribuicao());
+        }
+        if (ctx.condicional()) {
+            return this.visit(ctx.condicional());
+        }
+        if (ctx.laco()) {
+            return this.visit(ctx.laco());
+        }
+        if (ctx.ler()) {
+            return this.visit(ctx.ler());
+        }
+
+        if (ctx.expressionStatement()) {
+            return this.visit(ctx.expressionStatement());
+        }
+
         return null;
+
     }
 
 
@@ -55,7 +75,9 @@ export default class AstBuilderVisitor extends NovaScriptVisitor {
 
 
     visitAtribuicao(ctx) {
+
         if (ctx.expressao()) {
+
             return {
                 type: 'ExpressionStatement',
                 expression: {
@@ -87,11 +109,11 @@ export default class AstBuilderVisitor extends NovaScriptVisitor {
 
     visitLer(ctx) {
         // AST para o comando 'ler'
-        const varName = ctx.ID().getText();
+        const funcaoConvCtx = ctx.funcao_conversao();
         const promptText = ctx.STRING() ? this._text(ctx.STRING()).slice(1, -1) : "";
 
         // Nó da chamada da função 'prompt()' que aparece na AST
-        const callNode = {
+        const promptNode = {
             type: 'CallExpression',
             callee: {
                 type: 'Identifier',
@@ -104,11 +126,24 @@ export default class AstBuilderVisitor extends NovaScriptVisitor {
                 }
             ]
         };
+        // Se tem função de conversão, envolve o prompt nela
+    let initNode = promptNode;
+    if (funcaoConvCtx) {
+        initNode = {
+            type: 'CallExpression',
+            callee: {
+                type: 'Identifier',
+                name: funcaoConvCtx.getText()
+            },
+            arguments: [promptNode]
+        };
+    }
 
-        
         /* Se a gramática usou 'let', cria-se uma declaração
          * Senão, criamos uma atribuição (caso a variável já existe)
          */
+        // Verifica se tem ID (variável) para atribuir
+
         if (ctx.getText().startsWith('let')) {
             return {
                 type: 'VariableDeclaration',
@@ -120,13 +155,14 @@ export default class AstBuilderVisitor extends NovaScriptVisitor {
                             type: 'Identifier',
                             name: varName
                         },
-                        init: callNode
+                        init: initNode
                     }
                 ]
             };
         }
 
         /* Caso de 'prompt' sem 'let' (atribuição a variável existente) */ // <- aplicação futura?
+         const varName = ctx.ID().getText();       
         return {
             type: 'ExpressionStatement',
             expression: {
@@ -139,6 +175,23 @@ export default class AstBuilderVisitor extends NovaScriptVisitor {
                 right: callNode
             }
         };
+    }
+
+    visitExpressionStatement(ctx) {
+        if (ctx.atribuicao()) {
+            return this.visit(ctx.atribuicao());
+        }
+        // Tenta visitar diretamente os children
+        for (let child of ctx.children) {
+            const result = this.visit(child);
+            if (result) {
+                return {
+                    type: 'ExpressionStatement',
+                    expression: result
+                };
+            }
+        }
+        return null;
     }
 
 
@@ -190,6 +243,20 @@ export default class AstBuilderVisitor extends NovaScriptVisitor {
     // --- Tratamento de Expressões ---
 
     visitExpressao(ctx) {
+            const text = ctx.getText();
+    console.log("DEBUG visitExpressao:", text);
+    
+    // Se for prompt, trata como CallExpression
+    if (text.startsWith('prompt(')) {
+        const promptMatch = text.match(/prompt\(["']([^"']*)["']\)/);
+        const promptText = promptMatch ? promptMatch[1] : "";
+        return {
+            type: 'CallExpression',
+            callee: { type: 'Identifier', name: 'prompt' },
+            arguments: [{ type: 'Literal', value: promptText }]
+        };
+    }
+
         if (ctx.expmat()) return this.visit(ctx.expmat());
         if (ctx.STRING()) return {
             type: 'Literal',
@@ -234,10 +301,56 @@ export default class AstBuilderVisitor extends NovaScriptVisitor {
     }
 
 
-    // Trata fatores (números, IDs, expr entre parênteses)
     visitFator(ctx) {
-        if (ctx.numero()) return this.visit(ctx.numero());
-        if (ctx.expmat()) return this.visit(ctx.expmat());    // para parêntses: (expmat)
+const atomoCtx = ctx.atomo();
+    if (!atomoCtx) return null;
+
+    // Número, ID ou literal
+    if (atomoCtx.numero()) return this.visit(atomoCtx.numero());
+    if (atomoCtx.STRING()) return { type: 'Literal', value: this._text(atomoCtx.STRING()).slice(1, -1) };
+
+    // Expressão entre parênteses
+    if (atomoCtx.expmat()) return this.visit(atomoCtx.expmat());
+
+    // Função de conversão (Number, parseInt, parseFloat)
+    if (atomoCtx.funcao_conversao()) {
+        // Pegamos o argumento do atomo (que pode ser prompt ou outra expressão)
+        const argAtomo = atomoCtx.atomo(0);
+        let argValue = null;
+
+        if (argAtomo) {
+            // Se for prompt dentro da função
+            if (argAtomo.getText().startsWith('prompt')) {
+                const promptText = argAtomo.STRING() ? argAtomo.STRING().getText().slice(1, -1) : "";
+                argValue = {
+                    type: 'CallExpression',
+                    callee: { type: 'Identifier', name: 'prompt' },
+                    arguments: [{ type: 'Literal', value: promptText }]
+                };
+            } else {
+                argValue = this.visit(argAtomo);
+            }
+        }
+
+        return {
+            type: 'CallExpression',
+            callee: { type: 'Identifier', name: atomoCtx.funcao_conversao().getText() },
+            arguments: [argValue]
+        };
+    }
+
+    // Prompt sozinho
+    if (atomoCtx.getText().startsWith('prompt')) {
+        const promptText = atomoCtx.STRING() ? atomoCtx.STRING().getText().slice(1, -1) : "";
+        return {
+            type: 'CallExpression',
+            callee: { type: 'Identifier', name: 'prompt' },
+            arguments: [{ type: 'Literal', value: promptText }]
+        };
+    }
+
+    return null;
+
     }
 
 
@@ -254,7 +367,7 @@ export default class AstBuilderVisitor extends NovaScriptVisitor {
                 value: parseFloat(this._text(ctx.DECIMAL())),
             };
         }
-        if (ctx.ID())  {
+        if (ctx.ID()) {
             return {
                 type: 'Identifier',
                 name: this._text(ctx.ID())
@@ -267,7 +380,31 @@ export default class AstBuilderVisitor extends NovaScriptVisitor {
     // --- Estruturas de Controle ---
 
     visitCondicional(ctx) {
-        return this.visit(ctx.se());
+
+        const seCtx = ctx.se();
+
+        // pega o nó/valor retornado pelo visitor da condicao
+        const rawTest = this.visit(seCtx.condicao());
+
+        // normaliza: se por algum motivo vier um array, usa o primeiro elemento
+        const condicao = Array.isArray(rawTest) ? rawTest[0] : rawTest;
+
+        const consequent = this.visit(seCtx.bloco(0));
+
+        // trata else / else if
+        let alternate = null;
+        if (seCtx.bloco(1)) {
+            alternate = this.visit(seCtx.bloco(1));
+        } else if (seCtx.se()) {
+            alternate = this.visit(seCtx.se());
+        }
+
+        return {
+            type: "IfStatement",
+            test: condicao,
+            consequent,
+            alternate
+        };
     }
 
 
@@ -281,7 +418,7 @@ export default class AstBuilderVisitor extends NovaScriptVisitor {
         } else if (ctx.se()) {      // se existe um 'else if'
             alternate = this.visit(ctx.se());
         }
-        
+
         return {
             type: 'IfStatement', test, consequent, alternate
         };
@@ -304,11 +441,15 @@ export default class AstBuilderVisitor extends NovaScriptVisitor {
             };
         }
         if (this._text(ctx.getChild(0)) === 'for') {
+            const finalNode = typeof ctx.final_ === 'function'
+                ? ctx.final_()
+                : (typeof ctx.final === 'function' ? ctx.final() : null);
+
             return {
                 type: 'ForStatement',
                 init: this.visit(ctx.inicio()),
                 test: this.visit(ctx.condicao()),
-                update: ctx.final() ? this.visit(ctx.final()) : null,
+                update: finalNode ? this.visit(finalNode) : null,
                 body: this.visit(ctx.bloco())
             };
         }
@@ -324,15 +465,55 @@ export default class AstBuilderVisitor extends NovaScriptVisitor {
 
 
     visitInicio(ctx) {
-        if (ctx.declaracao()) return this.visit(ctx.declaracao());
-        if (ctx.atribuicao()) return this.visit(ctx.atribuicao()).expression;
+        if (ctx.getChild(0).getText() === 'let') {
+            return {
+                type: 'VariableDeclaration',
+                kind: 'let',
+                declarations: [{
+                    type: 'VariableDeclarator',
+                    id: {
+                        type: 'Identifier',
+                        name: ctx.ID().getText()
+                    },
+                    init: this.visit(ctx.expressao())
+                }]
+            };
+        } else {
+            return {
+                type: 'AssignmentExpression',
+                operator: '=',
+                left: {
+                    type: 'Identifier',
+                    name: ctx.ID().getText()
+                },
+                right: this.visit(ctx.expressao())
+            };
+        }
     }
+
 
 
     visitFinal(ctx) {
-        return this.visit(ctx.atribuicao()).expression;
+        if (ctx.expressao()) {
+            return {
+                type: 'AssignmentExpression',
+                operator: '=',
+                left: {
+                    type: 'Identifier',
+                    name: ctx.ID().getText()
+                },
+                right: this.visit(ctx.expressao())
+            };
+        }
+        else {
+            return {
+                type: 'UpdateExpression',
+                operator: this._text(ctx.getChild(1)),
+                argument: { type: 'Identifier', name: ctx.ID().getText() },
+                prefix: false
+            };
+        }
     }
-
 
 
     // --- Condições ---
@@ -382,16 +563,19 @@ export default class AstBuilderVisitor extends NovaScriptVisitor {
                 prefix: true
             };
         }
+        return this.visit(ctx.condicao_par());
     }
 
 
     visitCondicao_par(ctx) {
         if (ctx.condicao()) return this.visit(ctx.condicao());
+        const leftExpr = ctx.expressao?.(0) || ctx.expmat?.(0);
+        const rightExpr = ctx.expressao?.(1) || ctx.expmat?.(1);
         return {
             type: 'BinaryExpression',
             operator: this._text(ctx.getChild(1)),
-            left: this.visit(ctx.expmat(0)),
-            right: this.visit(ctx.expmat(1))
+            left: this.visit(leftExpr),
+            right: this.visit(rightExpr)
         };
     }
 }

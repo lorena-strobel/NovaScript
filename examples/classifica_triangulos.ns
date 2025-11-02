@@ -1,0 +1,21 @@
+let a = Number(prompt("Digite o valor de a: "));
+let b = Number(prompt("Digite o valor de b: "));
+let c = Number(prompt("Digite o valor de c: "));
+
+if (a <= 0 || b <= 0 || c <= 0) {
+    console.log("Erro: Valores devem ser positivos e maiores que zero");
+} else {
+    if (a + b > c && a + c > b && b + c > a) {
+        if (a == b && b == c) {
+            console.log("Triângulo equilátero válido");
+        } else {
+            if (a == b || a == c || b == c) {
+                console.log("Triângulo isósceles válido");
+            } else {
+                console.log("Triângulo escaleno válido");
+            }
+        }
+    } else {
+        console.log("Medidas inválidas");
+    }
+}
