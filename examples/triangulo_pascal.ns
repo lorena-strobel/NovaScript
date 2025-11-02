@@ -1,0 +1,24 @@
+let n = prompt("Digite um número: ");
+
+if (n < 1) {
+    console.log("Erro: n deve ser >= 1");
+} else {
+    let i = 0;
+    while (i < n) {
+        let j = 0;
+        let valor = 1;
+        while (j <= i) {
+            console.log(valor + " ");
+            
+            let numerador = i - j;
+            let denominador = j + 1;
+            let produto = valor * numerador;
+            valor = produto / denominador;
+
+            j = j + 1;
+        }
+        console.log("");
+        i = i + 1;
+    }
+}
+

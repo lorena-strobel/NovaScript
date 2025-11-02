@@ -14,15 +14,6 @@ expressionStatement
     : atribuicao
     ;
 
-lista
-    : declaracao
-    | escrever 
-    | ler
-    | condicional
-    | laco
-    | atribuicao
-    ;
-
 declaracao 
     : 'let' lista_atrib
     ;
@@ -68,13 +59,20 @@ expressao
 expmat
     : termo (( '+' | '-' ) termo)*
     ;
+
 termo
-    : fator (( '*' | '/' ) fator)*
+    : fator (( '*' | '/' | '%' ) fator)*
     ;
 
 fator
+    : ('+' | '-' | '!')? atomo  
+    ;
+
+atomo 
     : numero
     | '(' expmat ')'
+    | funcao_conversao '(' atomo ')'
+    | 'prompt' '(' STRING ')'
     ;
 
 numero

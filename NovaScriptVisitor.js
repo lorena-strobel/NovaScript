@@ -24,12 +24,6 @@ export default class NovaScriptVisitor extends antlr4.tree.ParseTreeVisitor {
 	}
 
 
-	// Visit a parse tree produced by NovaScriptParser#lista.
-	visitLista(ctx) {
-	  return this.visitChildren(ctx);
-	}
-
-
 	// Visit a parse tree produced by NovaScriptParser#declaracao.
 	visitDeclaracao(ctx) {
 	  return this.visitChildren(ctx);
@@ -98,6 +92,12 @@ export default class NovaScriptVisitor extends antlr4.tree.ParseTreeVisitor {
 
 	// Visit a parse tree produced by NovaScriptParser#fator.
 	visitFator(ctx) {
+	  return this.visitChildren(ctx);
+	}
+
+
+	// Visit a parse tree produced by NovaScriptParser#atomo.
+	visitAtomo(ctx) {
 	  return this.visitChildren(ctx);
 	}
 

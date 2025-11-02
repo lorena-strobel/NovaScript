@@ -32,15 +32,6 @@ export default class NovaScriptListener extends antlr4.tree.ParseTreeListener {
 	}
 
 
-	// Enter a parse tree produced by NovaScriptParser#lista.
-	enterLista(ctx) {
-	}
-
-	// Exit a parse tree produced by NovaScriptParser#lista.
-	exitLista(ctx) {
-	}
-
-
 	// Enter a parse tree produced by NovaScriptParser#declaracao.
 	enterDeclaracao(ctx) {
 	}
@@ -146,6 +137,15 @@ export default class NovaScriptListener extends antlr4.tree.ParseTreeListener {
 
 	// Exit a parse tree produced by NovaScriptParser#fator.
 	exitFator(ctx) {
+	}
+
+
+	// Enter a parse tree produced by NovaScriptParser#atomo.
+	enterAtomo(ctx) {
+	}
+
+	// Exit a parse tree produced by NovaScriptParser#atomo.
+	exitAtomo(ctx) {
 	}
 
 
