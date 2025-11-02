@@ -1,4 +1,4 @@
-let n = prompt("Digite um número: ");
+let n = Number(prompt("Digite um número: "));
 
 if (n < 1) {
     console.log("Erro: n deve ser >= 1");
@@ -21,4 +21,3 @@ if (n < 1) {
         i = i + 1;
     }
 }
-
