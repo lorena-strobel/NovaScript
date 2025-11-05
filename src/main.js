@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
-import antlr4 from 'antlr4';
-import { Graphviz } from '@hpcc-js/wasm';
+import antlr4 from 'antlr4';                // -> o runtime
+import { Graphviz } from '@hpcc-js/wasm';   // -> para gerar as imagens SVG da AST construída
 
 import NovaScriptLexer from '../NovaScriptLexer.js';
 import NovaScriptParser from '../NovaScriptParser.js';
@@ -57,7 +57,7 @@ async function main() {
     // Leitura arquivo e configuração Parser
     const filePath = process.argv[2];
     if (!filePath) {
-        console.log("Por favor, forneça o caminha para o arquivo .ns");
+        console.log("Por favor, forneça o caminho para o arquivo .ns");
         process.exit(1);
     }
 
@@ -73,15 +73,15 @@ async function main() {
     parser.removeErrorListeners();
     const errorListener = new NovaScriptErrorListener();
     lexer.addErrorListener(errorListener);
-    parser.addErrorListener(errorListener);     // <- conecta o listener ao Parser
+    parser.addErrorListener(errorListener);
     
-    parser.buildParseTrees = true;
+    parser.buildParseTrees = true;      // <- conecta o listener ao Parser
 
 
     // Inicia a análise
     try {
         console.log("Iniciando análise...");
-        const tree = parser.programa();     // Árvore de Parse Concreta
+        const tree = parser.programa();     // <- Árvore de Parse Concreta vinda do arquivo gerado
         console.log("Análise concluída com sucesso.");
     
         // --- CONSTRUÇÃO DA AST ---

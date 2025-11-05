@@ -1,7 +1,7 @@
 import { type } from 'os';
 import NovaScriptVisitor from '../NovaScriptVisitor.js';
 
-// Classe principal que constrói a AST
+// Classe principal que constrói a AST com base no arquivo Parser gerado
 export default class AstBuilderVisitor extends NovaScriptVisitor {
 
     // Helper extrair o texto do terminal ou nome Identificador
