@@ -87,10 +87,10 @@ graph LR
     e6@{ animate: true }
     e7@{ animate: true }
     
-    style A fill:#3498DB,stroke:#D6EAF8
-    style G fill:#2ECC71,stroke:#D5F5E3
-    style H fill:#E74C3C,stroke:#FADBD8
-    style I fill:#F1C40F,stroke:#FCF3CF
+    style A fill:#1d557a,stroke:#D6EAF8
+    style G fill:#155c33,stroke:#D5F5E3
+    style H fill:#78251d,stroke:#FADBD8
+    style I fill:#4f4109,stroke:#FCF3CF
 ```
 
 **Fluxo do Processamento**
