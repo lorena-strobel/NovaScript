@@ -1,0 +1,17 @@
+let idade = 18
+
+if (idade >= 18) {
+    console.log("Você é maior de idade")
+} else {
+    console.log("Você é menor de idade")
+}
+
+let nota = 85
+
+if (nota >= 90) {
+    console.log("Excelente!")
+} else if (nota >= 70) {
+    console.log("Bom!")
+} else {
+    console.log("Precisa melhorar")
+}

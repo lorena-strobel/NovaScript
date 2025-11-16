@@ -395,7 +395,7 @@ const atomoCtx = ctx.atomo();
         let alternate = null;
         if (seCtx.bloco(1)) {
             alternate = this.visit(seCtx.bloco(1));
-        } else if (seCtx.se()) {
+        } else if (seCtx.se && typeof seCtx.se === "function" && seCtx.se()) {
             alternate = this.visit(seCtx.se());
         }
 
@@ -571,6 +571,15 @@ const atomoCtx = ctx.atomo();
         if (ctx.condicao()) return this.visit(ctx.condicao());
         const leftExpr = ctx.expressao?.(0) || ctx.expmat?.(0);
         const rightExpr = ctx.expressao?.(1) || ctx.expmat?.(1);
+
+        // Se só tem um parâmetro, só retorna ele
+        /**
+         * 'if (variavel)' em vez de 'if (variavel === true)'
+         */
+        if (!rightExpr) {
+            return this.visit(leftExpr);
+        }
+
         return {
             type: 'BinaryExpression',
             operator: this._text(ctx.getChild(1)),

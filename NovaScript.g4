@@ -133,6 +133,7 @@ condicao_not
 condicao_par
     : '(' condicao ')'
     | expmat ( '==' | '!=' | '>' | '<' | '>=' | '<=' ) expmat
+    | expmat
     ;
 
 ID: [a-zA-Z] [a-zA-Z0-9]* ;  

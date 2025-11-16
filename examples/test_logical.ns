@@ -1,0 +1,23 @@
+let idade = 25
+let temCarteira = true
+
+if (idade >= 18 && temCarteira) {
+    console.log("Pode dirigir")
+} else {
+    console.log("Não pode dirigir")
+}
+
+let temDinheiro = false
+let temCartao = true
+
+if (temDinheiro || temCartao) {
+    console.log("Pode comprar")
+} else {
+    console.log("Sem condições de compra")
+}
+
+let chovendo = false
+
+if (!chovendo) {
+    console.log("Dia ensolarado")
+}

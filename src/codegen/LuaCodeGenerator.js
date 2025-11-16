@@ -74,6 +74,7 @@ export default class LuaCodeGenerator {
         return code;
     }
 
+
     visitVariableDeclaration(node) {
         let code = '';
 
@@ -104,6 +105,27 @@ export default class LuaCodeGenerator {
         return node.name;
     }
 
+
+    visitUnaryExpression(node) {
+        const argument = this.visit(node.argument);
+
+        // Mapeamento de operadores unários NovaScript → Lua
+        const operatorMap = {
+            '!': 'not ',    // -> Lua usa 'not' com espaço ' '
+            '-': '-',
+            '+': '+'
+        };
+
+        const luaOperator = operatorMap[node.operator] || node.operator;
+
+        // Se for 'not', precisa de espaço ou parênteses
+        if (node.operator === '!') {
+            return `not (${argument})`;
+        }
+
+        return `${luaOperator}${argument}`;
+    }
+    
     visitBinaryExpression(node) {
         const left = this.visit(node.left);
         const right = this.visit(node.right);
@@ -137,8 +159,19 @@ export default class LuaCodeGenerator {
         return `${left} ${luaOperator} ${right}`;
     }
 
-    visitExpressionStatement(node) {
-        return this.visit(node.expression);
+    visitLogicalExpression(node) {
+        const left = this.visit(node.left);
+        const right = this.visit(node.right);
+
+        // Mapeamento de operadores lógicos NovaScript → Lua
+        const operatorMap = {
+            '&&': 'and',
+            '||': 'or'
+        };
+
+        const luaOperator = operatorMap[node.operator] || node.operator;
+
+        return `${left} ${luaOperator} ${right}`;
     }
 
     visitAssignmentExpression(node) {
@@ -171,4 +204,64 @@ export default class LuaCodeGenerator {
 
         throw new Error(`Gerador Lua: Função '${functionName}' não reconhecida`);
     }
+
+
+    visitExpressionStatement(node) {
+        return this.visit(node.expression);
+    }
+
+    visitIfStatement(node) {
+        let code = '';
+        
+        // Condição IF
+        const test = this.visit(node.test);
+        code += `if ${test} then\n`;
+
+        // Corpo do IF (consequent)
+        this.increaseIndent();
+        if (node.consequent.type === 'BlockStatement') {
+            code += this.visit(node.consequent);
+        } else {
+            code += this.indent() + this.visit(node.consequent) + '\n';
+        }
+        this.decreaseIndent();
+
+        
+        // Bloco ELSE (se existir)
+        if (node.alternate) {
+
+            // Verifica se 'alternate' é um 'IfStatement' (para 'ELSEIF')
+            if (node.alternate.type === 'IfStatement') {
+
+                // Remove o 'IF' do início, troque por 'ELSEIF'
+                let elseIfCode = this.visitIfStatement(node.alternate).trim();
+                elseIfCode = elseIfCode.replace(/^if/, 'elseif');
+                code += this.indent() + elseIfCode + '\n';
+            } else {
+                code += this.indent() + 'else\n';
+                this.increaseIndent();
+                code += this.visit(node.alternate);
+                this.decreaseIndent();
+                code += this.indent();
+            }
+        }
+
+        code += 'end';
+
+        return code;
+    }
+
+    visitBlockStatement(node) {
+        let code = '';
+
+        for (const statement of node.body) {
+            const statementCode = this.visit(statement);
+            if (statementCode) {
+                code += this.indent() + statementCode + '\n';
+            }
+        }
+
+        return code;
+    }
+
 }
