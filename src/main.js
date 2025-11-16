@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
-import antlr4 from 'antlr4';
-import { Graphviz } from '@hpcc-js/wasm';
+import antlr4 from 'antlr4';                // -> o runtime
+import { Graphviz } from '@hpcc-js/wasm';   // -> para gerar as imagens SVG da AST construída
 
 import NovaScriptLexer from '../NovaScriptLexer.js';
 import NovaScriptParser from '../NovaScriptParser.js';

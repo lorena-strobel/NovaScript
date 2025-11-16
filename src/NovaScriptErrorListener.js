@@ -5,7 +5,7 @@ class NovaScriptErrorListener extends antlr4.error.ErrorListener {
         let errorType = "SINTÁTICO";    // <- assume erro sintático por padrão
         let customMsg = msg;
 
-        if (msg.startsWith("token recognition error")) {    // <- se erro for Lexer, muda-o
+        if (msg.startsWith("token recognition error")) {    // <- se erro for Lexer será customizado com base nas especificações da atividade
             errorType = "LÉXICO";
             const invalidSymbol = msg.split("'")[1];
             customMsg = `O símbolo '${invalidSymbol}' não é reconhecido pela linguagem.`;
@@ -27,7 +27,7 @@ class NovaScriptErrorListener extends antlr4.error.ErrorListener {
 
         console.error(`ERRO ${errorType} [Linha ${line}, Coluna ${column}]: ${customMsg}`);
 
-        process.exit(1);
+        process.exit(1);    // -> encerra por completo o programa após especificar o erro
     }
 }
 

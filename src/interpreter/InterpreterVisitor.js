@@ -1,6 +1,6 @@
 import { error } from 'console';
 import { type } from 'os';
-import readlineSync from 'readline-sync';
+import readlineSync from 'readline-sync';   // -> para o comando 'prompt()' do JavaScript: 111
 
 
 export default class InterpreterVisitor {
@@ -9,7 +9,7 @@ export default class InterpreterVisitor {
         this.symbolTable = new Map();
     }
 
-    visit(node) {
+    visit(node) {       // <- visita os nós que foram construídos pelo 'AstBuilderVisitor'
         // Defesa: node nulo / primitivo / sem type
         if (node === null || node === undefined) {
             // nó ausente — simplesmente devolve undefined (normal em alguns casos)
@@ -101,7 +101,7 @@ export default class InterpreterVisitor {
     }
 
     visitCallExpression(node) {
-        // Lógica para 'console.log('
+        // Lógica para 'console.log()'
         if (node.callee.name === 'console.log') {
             const args = node.arguments.map(arg => this.visit(arg));
             console.log(...args);
@@ -134,8 +134,8 @@ export default class InterpreterVisitor {
         if (!node.left || !node.right) {
             throw new Error(`Runtime Error: BinaryExpression mal formada.`);
         }
-        const left = this.visit(node.left);
-        const right = this.visit(node.right);
+        const left = this.visit(node.left);     // -> this.visit(Identifier a)
+        const right = this.visit(node.right);   // -> this.visit(Literal 10)
 
         switch (node.operator) {
             case '+': return left + right;
@@ -165,7 +165,7 @@ export default class InterpreterVisitor {
     }
 
     visitLiteral(node) {
-        // Retorna o valor literal (EX: 10, "olá", true)
+        // Retorna o valor literal (EX: 10, "olá", true) do nó
         return node.value;
     }
 
@@ -229,7 +229,7 @@ export default class InterpreterVisitor {
     // Estruturas de controle
 
     visitIfStatement(node) {
-        const test = this.visit(node.test);
+        const test = this.visit(node.test);     // -> this.visit(BinaryExpression >)
 
         if (this._evaluateCondition(test)) {
             this.visit(node.consequent);
