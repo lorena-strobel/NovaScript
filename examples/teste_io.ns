@@ -1,5 +1,7 @@
-let nome = prompt("Qual é o seu nome?");
-let idade = Number(prompt("Qual a sua idade?"));
+let a = 10
+let b = 20
+let soma = a + b
 
-console.log("Olá, " + nome + "!")
-console.log("Ano que vem, você terá " + (idade + 1) + " anos.")
+console.log("O valor de 'a' é: " + a)
+console.log("O valor de 'b' é: " + b)
+console.log("A soma de 'a + b' é: " + soma)

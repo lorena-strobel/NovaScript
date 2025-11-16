@@ -122,8 +122,18 @@ export default class LuaCodeGenerator {
             '>=': '>=',
         };
 
-        const luaOperator = operatorMap[node.operator] || node.operator;
+        let luaOperator = operatorMap[node.operator] || node.operator;
 
+        // Se o operador for '+' e pelo menos um dos lados for String, usar concatenação do Lua (..)
+        if (node.operator === '+') {
+            const isLeftString = node.left.type === 'Literal' && typeof node.left.value === 'string';
+            const isRightString = node.right.type === 'Literal' && typeof node.right.value === 'string';
+
+            if (isLeftString || isRightString) {
+                luaOperator = '..';
+            }
+        }
+        
         return `${left} ${luaOperator} ${right}`;
     }
 
@@ -139,7 +149,26 @@ export default class LuaCodeGenerator {
     }
 
     visitCallExpression(node) {
-        // TODO: Issue 9
-        return '';
+        const functionName = node.callee.name;
+
+        // Tradução de 'console.log()' → 'print()'
+        if (functionName === 'console.log') {
+            const args = node.arguments.map(arg => this.visit(arg)).join(', ');
+            return `print(${args})`;
+        }
+
+        // Tradução de prompt() → io.write() + io.read()
+        if (functionName === 'prompt') {
+            // O primeiro argumento é a mensagem a ser exibida
+            if (node.arguments.length > 0) {
+                const message = this.visit(node.arguments[0]);
+                
+                // Em Lua, 'io.write' não adiciona quebra de linha, e 'io.read()' lê a entrada
+                return `(function() io.write(${message} .. " "); return io.read() end)()`;
+            }
+            return 'io.read()';
+        }
+
+        throw new Error(`Gerador Lua: Função '${functionName}' não reconhecida`);
     }
 }
