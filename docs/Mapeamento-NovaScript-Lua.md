@@ -61,6 +61,16 @@ if (x > 10) {
 }
 ```
 
+**Lua:**
+
+```lua
+if x > 10 then
+    print("maior")
+else
+    print("menor")
+end
+```
+
 ### While
 
 **NovaScript:**
