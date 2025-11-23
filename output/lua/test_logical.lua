@@ -7,6 +7,7 @@ if idade >= 18 and temCarteira then
 else
     print("Não pode dirigir")
 end
+
 local temDinheiro = false
 local temCartao = true
 if temDinheiro or temCartao then
@@ -14,7 +15,9 @@ if temDinheiro or temCartao then
 else
     print("Sem condições de compra")
 end
+
 local chovendo = false
 if not (chovendo) then
     print("Dia ensolarado")
 end
+

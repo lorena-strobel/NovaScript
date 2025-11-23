@@ -186,8 +186,29 @@ export default class LuaCodeGenerator {
 
         // Tradução de 'console.log()' → 'print()'
         if (functionName === 'console.log') {
+            // Detecta se o argumento é uma operação de soma com string " "
+        if (node.arguments.length === 1 && node.arguments[0].type === 'BinaryExpression') {
+            const arg = node.arguments[0];
+            // Verifica se é valor + " " (concatenação com espaço)
+            if ((arg.left.type === 'Identifier' || arg.left.type === 'Literal') &&
+                arg.right.type === 'Literal' &&
+                arg.right.value === ' ') {
+                const left = this.visit(arg.left);
+                return `io.write(string.format("%d ", ${left}))`;
+            }
+        }
+            // caso normal de console.log
             const args = node.arguments.map(arg => this.visit(arg)).join(', ');
             return `print(${args})`;
+        }
+
+        // Tradução Number(x) -> tonumber(x)
+        if (functionName === "Number") {
+            if (node.arguments.length !== 1) {
+                throw new Error("Gerador Lua: Number() requer exatamente 1 argumento");
+            }
+            const arg = this.visit(node.arguments[0]);
+            return `tonumber(${arg})`;
         }
 
         // Tradução de prompt() → io.write() + io.read()
@@ -197,7 +218,7 @@ export default class LuaCodeGenerator {
                 const message = this.visit(node.arguments[0]);
                 
                 // Em Lua, 'io.write' não adiciona quebra de linha, e 'io.read()' lê a entrada
-                return `(function() io.write(${message} .. " "); return io.read() end)()`;
+                return `(function() io.write(${message}); return io.read() end)()`;
             }
             return 'io.read()';
         }
@@ -211,44 +232,43 @@ export default class LuaCodeGenerator {
     }
 
     visitIfStatement(node) {
-        let code = '';
-        
-        // Condição IF
-        const test = this.visit(node.test);
-        code += `if ${test} then\n`;
+    let code = '';
+    let currentIf = node;
+    let isFirst = true;
 
-        // Corpo do IF (consequent)
-        this.increaseIndent();
-        if (node.consequent.type === 'BlockStatement') {
-            code += this.visit(node.consequent);
+    while (currentIf) {
+        const test = this.visit(currentIf.test);
+
+        if (isFirst) {
+            code += `${this.indent()}if ${test} then\n`;
+            isFirst = false;
         } else {
-            code += this.indent() + this.visit(node.consequent) + '\n';
+            code += `${this.indent()}elseif ${test} then\n`;
         }
+
+        this.increaseIndent();
+        code += this.visit(currentIf.consequent);
         this.decreaseIndent();
 
-        
-        // Bloco ELSE (se existir)
-        if (node.alternate) {
-
-            // Verifica se 'alternate' é um 'IfStatement' (para 'ELSEIF')
-            if (node.alternate.type === 'IfStatement') {
-
-                // Remove o 'IF' do início, troque por 'ELSEIF'
-                let elseIfCode = this.visitIfStatement(node.alternate).trim();
-                elseIfCode = elseIfCode.replace(/^if/, 'elseif');
-                code += this.indent() + elseIfCode + '\n';
-            } else {
-                code += this.indent() + 'else\n';
-                this.increaseIndent();
-                code += this.visit(node.alternate);
-                this.decreaseIndent();
-                code += this.indent();
-            }
+        // caso em que alternate é outro IfStatement (else if)
+        if (currentIf.alternate && currentIf.alternate.type === 'IfStatement') {
+            currentIf = currentIf.alternate;
+            continue;
         }
 
-        code += 'end';
+        // else simples
+        if (currentIf.alternate && currentIf.alternate.type === 'BlockStatement') {
+            code += `${this.indent()}else\n`;
+            this.increaseIndent();
+            code += this.visit(currentIf.alternate);
+            this.decreaseIndent();
+        }
 
-        return code;
+        break; // fim
+    }
+
+    code += `${this.indent()}end\n`;
+    return code;
     }
 
     visitBlockStatement(node) {
@@ -263,5 +283,77 @@ export default class LuaCodeGenerator {
 
         return code;
     }
+
+    visitUpdateExpression(node) {
+        if (node.operator === "++") {
+            return `${node.argument.name} = ${node.argument.name} + 1`;
+        }
+        else if (node.operator === "--") {
+            return `${node.argument.name} = ${node.argument.name} - 1`;
+        }
+        else {
+            throw new Error("Operador de UpdateExpression não suportado: " + node.operator);
+        }
+    }
+
+    visitWhileStatement(node) {
+        const test = this.visit(node.test);
+        let code = `${this.indent()}while ${test} do\n`;
+
+        this.increaseIndent();
+        code += this.visit(node.body);
+        this.decreaseIndent();
+
+        code += `${this.indent()}end\n`;
+        return code;
+    }
+
+    // em lua a condição mais parecida com o "Do while" executa enquanto a condição for verdadeira
+    visitDoWhileStatement(node) {
+        let code = `repeat\n`;
+
+        this.increaseIndent();
+        code += this.visit(node.body);
+        this.decreaseIndent();
+
+        const test = this.visit(node.test);
+        code += `until not (${test})\n`;
+
+        return code;
+    }
+
+    // Em lua o for funciona com uma sintaxe difernte sem inicialização, condição e atualização na mesma linha
+    // em visitForStatement é usado primeiro um while e ao final de cada iteração um for
+    visitForStatement(node) {
+    let code = `do\n`;
+    this.increaseIndent();
+
+    // init (pode ser declaração ou atribuição)
+    if (node.init) {
+        code += this.indent() + this.visit(node.init) + '\n';
+    }
+
+    // while, condicao de repeticao
+    const test = node.test ? this.visit(node.test) : "true";
+    code += this.indent() + `while ${test} do\n`;
+
+    this.increaseIndent();
+    code += this.visit(node.body);
+
+    // update (i++, i--, ou i = i + 1)
+    if (node.update) {
+        code += this.indent() + this.visit(node.update) + '\n';
+    }
+
+    this.decreaseIndent();
+    code += this.indent() + `end\n`;  // fim do while
+
+    this.decreaseIndent();
+    code += `end\n`; // fim do bloco
+
+    return code;
+}
+
+
 
 }
