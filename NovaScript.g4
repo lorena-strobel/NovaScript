@@ -85,8 +85,8 @@ condicional
     : se
     ;
 
-se 
-    : 'if' '(' condicao ')' '{' bloco '}' ( 'else' '{' bloco '}' | 'else' 'if' '(' condicao ')' '{' bloco '}' )?
+se
+    : 'if' '(' condicao ')' '{' bloco '}' ( 'else' ( se | '{' bloco '}' ) )?
     ;
 
 laco

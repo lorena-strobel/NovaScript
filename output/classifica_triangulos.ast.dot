@@ -147,7 +147,7 @@ digraph AST {
   71 -> 72;
   73 [label="Identifier (console.log)"];
   72 -> 73;
-  74 [label="Literal (Triângulo equilátero válido)"];
+  74 [label="Literal (Triangulo equilátero válido)"];
   72 -> 74;
   75 [label="BlockStatement"];
   62 -> 75;
@@ -183,7 +183,7 @@ digraph AST {
   89 -> 90;
   91 [label="Identifier (console.log)"];
   90 -> 91;
-  92 [label="Literal (Triângulo isósceles válido)"];
+  92 [label="Literal (Triangulo isósceles valido)"];
   90 -> 92;
   93 [label="BlockStatement"];
   76 -> 93;
@@ -193,7 +193,7 @@ digraph AST {
   94 -> 95;
   96 [label="Identifier (console.log)"];
   95 -> 96;
-  97 [label="Literal (Triângulo escaleno válido)"];
+  97 [label="Literal (Triangulo escaleno valido)"];
   95 -> 97;
   98 [label="BlockStatement"];
   43 -> 98;
@@ -203,6 +203,6 @@ digraph AST {
   99 -> 100;
   101 [label="Identifier (console.log)"];
   100 -> 101;
-  102 [label="Literal (Medidas inválidas)"];
+  102 [label="Literal (Medidas invalidas)"];
   100 -> 102;
 }

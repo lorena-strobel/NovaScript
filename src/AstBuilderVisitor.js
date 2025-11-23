@@ -302,7 +302,7 @@ export default class AstBuilderVisitor extends NovaScriptVisitor {
 
 
     visitFator(ctx) {
-const atomoCtx = ctx.atomo();
+    const atomoCtx = ctx.atomo();
     if (!atomoCtx) return null;
 
     // Número, ID ou literal
@@ -380,48 +380,35 @@ const atomoCtx = ctx.atomo();
     // --- Estruturas de Controle ---
 
     visitCondicional(ctx) {
-
-        const seCtx = ctx.se();
-
-        // pega o nó/valor retornado pelo visitor da condicao
-        const rawTest = this.visit(seCtx.condicao());
-
-        // normaliza: se por algum motivo vier um array, usa o primeiro elemento
-        const condicao = Array.isArray(rawTest) ? rawTest[0] : rawTest;
-
-        const consequent = this.visit(seCtx.bloco(0));
-
-        // trata else / else if
-        let alternate = null;
-        if (seCtx.bloco(1)) {
-            alternate = this.visit(seCtx.bloco(1));
-        } else if (seCtx.se && typeof seCtx.se === "function" && seCtx.se()) {
-            alternate = this.visit(seCtx.se());
-        }
-
-        return {
-            type: "IfStatement",
-            test: condicao,
-            consequent,
-            alternate
-        };
+    // ctx.se() é o contexto filho da regra 'se'
+    return this.visit(ctx.se());
     }
 
-
     visitSe(ctx) {
-        const test = this.visit(ctx.condicao());
-        const consequent = this.visit(ctx.bloco(0));
-        let alternate = null;
+     const test = this.visit(ctx.condicao());
+    const consequent = this.visit(ctx.bloco(0));
 
-        if (ctx.bloco(1)) {         // se existe um block 'else'
-            alternate = this.visit(ctx.bloco(1));
-        } else if (ctx.se()) {      // se existe um 'else if'
+    let alternate = null;
+
+    if (ctx.getChildCount() > 7) {
+
+        // else se
+        if (ctx.se()) {
             alternate = this.visit(ctx.se());
         }
 
-        return {
-            type: 'IfStatement', test, consequent, alternate
-        };
+        // else { bloco }
+        else if (ctx.bloco(1)) {
+            alternate = this.visit(ctx.bloco(1));
+        }
+    }
+
+    return {
+        type: "IfStatement",
+        test,
+        consequent,
+        alternate
+    };
     }
 
 
