@@ -1,60 +1,14 @@
 # NovaScript
-> Este projeto é um trabalho colaborativo em dupla para uma atividade avaliativa na disciplina de **Compiladores** no curso de **Engenharia da Computação**, com o intuito de desenvolver uma linguagem de programação baseada no `JavaScript`, nomeada de `NovaScript`.
 
-### Colaboradores:
-- [Lorena Strobel Campos](https://github.com/lorena-strobel)
-- [Mateus de Souza Arruda](https://github.com/mateus-sa)
+[![JavaScript](https://img.shields.io/badge/JavaScript-ES6+-yellow.svg)](https://www.javascript.org/)
+[![Node.js](https://img.shields.io/badge/Node.js-14+-green.svg)](https://nodejs.org/)
+[![Lua](https://img.shields.io/badge/Lua-5.3+-blue.svg)](https://www.lua.org/)
+[![ANTLR4](https://img.shields.io/badge/ANTLR-4.13.2-blue.svg)](https://www.antlr.org/)
+[![License](https://img.shields.io/badge/License-ISC-lightgrey.svg)](LICENSE)
 
-### Docente:
-- [Ed Wilson Tavares Ferreira](https://github.com/edwilsonferreira)
+[Recursos](#recursos) • [Instalação](#instalação-e-configuração) • [Uso](#uso) • [Estrutura do Projeto](#estrutura-do-projeto) • [Referência Rápida da Sintaxe](#referência-rápida-da-sintaxe) • [Testes](#testando-o-sistema) • [Documentação](#documentação)
 
-
-<br>
-
----
-
-<br>
-
-
-## 1. Funcionalidades da Linguagem NovaScript
-
-O `NovaScript` suporta os seguintes comandos e construções:
-- **Declaração de Variáveis:** `let variavel = valor` - declara uma ou mais variáveis com valores opcionais.
-  - Ex: `let a = 10;`
-  - Ex: `let x, y = 5, z;`
-
-- **Entrada de Dados:** `prompt("mensagem")` - lê dados do usuário com conversão opcional de tipos.
-  - Ex: `let idade = Number(prompt("Digite sua idade: "));`
-  - Ex: `let valor = parseInt(prompt("Digite um número: "));`
-  - Ex: `let decimal = parseFloat(prompt("Digite um decimal: "));`
-
-- **Saída de Dados:** `console.log(expressão)` - exibe valores na saída padrão com suporte a concatenação.
-  - Ex: `console.log("Olá Mundo!");`
-  - Ex: `console.log("O resultado é: " + resultado);`
-
-- **Expressões Aritméticas:** Suporte completo a `+`, `-`, `*`, `/` com precedência usual e uso de parênteses `()`.
-  - Ex: `let resultado = (a + b) * (c / 2);`
-
-- **Estruturas Condicionais:** `if/else` e `else if` com suporte a operadores lógicos.
-  - Ex: `if (idade >= 18) { console.log("Maior de idade."); }`
-  - Ex: `if (x > 0) { ... } else if (x < 0) { ... }`
-
-- **Estruturas de Repetição:** `while`, `for` e `do-while`.
-  - Ex: `while (i < 10) { i++; }`
-  - Ex: `for (let i = 0; i < 5; i++) { console.log(i); }`
-  - Ex: `do { console.log(i); i++; } while (i < 3);`
-
-- **Operadores de Incremento/Decremento:** `++` e `--`.
-  - Ex: `contador++;` ou `--valor;`
-
-- **Operadores de Comparação:** `==`, `!=`, `>`, `<`, `>=`, `<=`.
-
-- **Operadores Lógicos:** `&&` (AND), `||` (OR), `!` (NOT).
-
-- **Tipos de Dados:** Suporte a números inteiros, decimais, strings e identificadores.
-
-- **Ponto e Vírgula Opcional:** Comandos podem ser terminados opcionalmente com `;`.
-
+</div>
 
 <br>
 
@@ -62,35 +16,202 @@ O `NovaScript` suporta os seguintes comandos e construções:
 
 <br>
 
+## Sobre o Projeto
 
-## 2. Arquitetura do Interpretador
+> **NovaScript** é um projeto acadêmico desenvolvido para a disciplina de **Compiladores** no curso de **Engenharia da Computação**. O objetivo é construir uma linguagem de programação funcional do zero, implementando conceitos de:
 
-O interpretador segue as fases tradicionais do processamento de linguagens: transformando o código fonte em execução direta.
+- Análise léxica e sintática (ANTLR4)
+- Construção de AST (Abstract Syntax Tree)
+- Interpretação direta (tree-walking)
+- Transpilação para outra linguagem (Lua)
+- Visualização de estruturas sintáticas
+
+### Equipe
+
+| Papel | Nome | GitHub |
+|-------|------|--------|
+| Desenvolvedor | Lorena Strobel Campos | [@lorena-strobel](https://github.com/lorena-strobel) |
+| Desenvolvedor | Mateus de Souza Arruda | [@mateus-sa](https://github.com/mateus-sa) |
+| Docente | Ed Wilson Tavares Ferreira | [@edwilsonferreira](https://github.com/edwilsonferreira) |
+
+---
+
+## Recursos
+
+### Funcionalidades da Linguagem
+
+<details>
+<summary><b>Declaração e Manipulação de Variáveis</b></summary>
+
+```ns
+// Declaração simples
+let idade = 25;
+
+// Múltiplas declarações
+let nome, sobrenome = "Silva", ativo = true;
+
+// Atribuição
+idade = 26;
+
+// Incremento/Decremento
+idade++;
+--idade;
+```
+
+</details>
+
+<details>
+<summary><b>Entrada e Saída</b></summary>
+
+```ns
+// Entrada de dados
+let nome = prompt("Digite seu nome: ");
+let idade = Number(prompt("Digite sua idade: "));
+
+// Conversões de tipo
+let inteiro = parseInt(prompt("Número inteiro: "));
+let decimal = parseFloat(prompt("Número decimal: "));
+
+// Saída
+console.log("Olá, " + nome + "!");
+console.log("Você tem " + idade + " anos.");
+```
+
+</details>
+
+<details>
+<summary><b>Operadores</b></summary>
+
+```ns
+// Aritméticos
+let soma = a + b;
+let subtracao = a - b;
+let multiplicacao = a * b;
+let divisao = a / b;
+let resto = a % b;
+
+// Comparação
+if (idade >= 18) { /* ... / }
+if (nome == "João") { / ... / }
+if (valor != 0) { / ... */ }
+
+// Lógicos
+if (idade >= 18 && temCarteira) { /* ... / }
+if (chovendo || frio) { / ... / }
+if (!disponivel) { / ... */ }
+```
+
+</details>
+
+<details>
+<summary><b>Estruturas de Controle</b></summary>
+
+```ns
+// Condicional simples
+if (nota >= 7) {
+    console.log("Aprovado");
+}
+
+// Condicional com else
+if (nota >= 7) {
+    console.log("Aprovado");
+} else {
+    console.log("Reprovado");
+}
+
+// Condicional aninhado (else if)
+if (nota >= 9) {
+    console.log("Excelente");
+} else if (nota >= 7) {
+    console.log("Bom");
+} else if (nota >= 5) {
+    console.log("Regular");
+} else {
+    console.log("Insuficiente");
+}
+```
+
+</details>
+
+<details>
+<summary><b>Estruturas de Repetição</b></summary>
+
+```
+// Loop while
+let i = 0;
+
+while (i < 5) {
+    console.log("Iteração: " + i);
+    i++;
+}
+
+// Loop for
+for (let j = 0; j < 10; j++) {
+    console.log(j);
+}
+
+// Loop do-while
+let contador = 0;
+
+do {
+    console.log(contador);
+    contador++;
+} while (contador < 3);
+```
+
+</details>
+
+<br>
+
+### Características Técnicas
+
+- **Dois modos de execução:** Interpretador direto ou transpilador Lua
+- **Análise robusta:** Detecção de erros léxicos, sintáticos e de execução
+- **Visualização automática:** Geração de diagramas AST (DOT/SVG)
+- **Sintaxe flexível:** Ponto-e-vírgula opcional
+- **Entrada interativa:** Suporte a `prompt()` para CLI
+- **Tratamento de erros:** Mensagens amigáveis e precisas
+
+<br>
+
+### Arquitetura do Interpretador
+
+O interpretador segue as fases tradicionais do processamento de linguagens: transformando o código fonte em execução direta e/ou posteriormente podendo transpilar para o código-final na linguagem Lua.
 
 **Visão Geral**
 ```mermaid
 graph LR
-    A([<B>Código Fonte NovaScript</B>]) --> B(Análise Léxica);
-    B e1@--> C(Análise Sintática);
-    C e2@--> D(Construção da AST);
-    D e3@--> E(Interpretação e Execução);
-    E e4@--> F(Geração de Visualizações);
-    F e5@--> G([<B>Saída do Programa</B>]);
-    F e6@--> H([<B>Arquivo SVG da AST</B>]);
-    F e7@--> I([<B>Arquivo DOT da AST</B>]);
+  A([<B>Código Fonte NovaScript</B>]) --> B(Análise Léxica);
+  B e1@--> C(Análise Sintática);
+  C e2@--> D(Construção da AST);
+  D e3@--> E{Modo de Execução?};
+  E e4@-->|Interpretador| F(Interpretação e Execução);
+  E e5@-->|Transpilador| G(Geração de Código Lua);
+  F e6@--> H(Geração de Visualizações);
+  G e7@--> H;
+  H e8@--> I([<B>Saída do Programa</B>]);
+  H e9@--> J([<B>Arquivo SVG da AST</B>]);
+  H e10@--> K([<B>Arquivo DOT da AST</B>]);
+  G e11@--> L([<B>Arquivo Lua</B>]);
+  
+  e1@{ animate: true; }
+  e2@{ animate: true; }
+  e3@{ animate: true; }
+  e4@{ animate: true; }
+  e5@{ animate: true; }
+  e6@{ animate: true; }
+  e7@{ animate: true; }
+  e8@{ animate: true; }
+  e9@{ animate: true; }
+  e10@{ animate: true; }
+  e11@{ animate: true; }
 
-    e1@{ animate: true }
-    e2@{ animate: true }
-    e3@{ animate: true }
-    e4@{ animate: true }
-    e5@{ animate: true }
-    e6@{ animate: true }
-    e7@{ animate: true }
-    
-    style A fill:#1d557a,stroke:#D6EAF8
-    style G fill:#155c33,stroke:#D5F5E3
-    style H fill:#78251d,stroke:#FADBD8
-    style I fill:#4f4109,stroke:#FCF3CF
+  style A fill:#1d557a,stroke:#D6EAF8
+  style E fill:#7d3c98,stroke:#EBDEF0
+  style I fill:#155c33,stroke:#D5F5E3
+  style J fill:#78251d,stroke:#FADBD8
+  style K fill:#4f4109,stroke:#FCF3CF
+  style L fill:#186a3b,stroke:#D5F5E3
 ```
 
 **Fluxo do Processamento**
@@ -101,61 +222,7 @@ graph LR
   3. **Construção da AST:** Converte a árvore de **Parse** em uma AST simplificada.
   4. **Interpretação:** Executa o código atravessando a AST.
   5. **Visualização:** Gera representação gráfica da AST.
-
-
-<br>
-
----
-
-<br>
-
-
-## 3. Estrutura do Projeto e Módulos
-
-O trabalho é organizado em módulos `JavaScript`:
-
-**Arquivo de Gramática e Parser Gerados**
-
-1. `NovaScript.g4`
-  - **Função:** arquivo de gramática formal da linguagem `NovaScript`, escrito na sintaxe do `ANTLR4`.
-  - **Responsabilidade:** define as regras léxicas (`tokens`) e sintáticas (estruturas de comandos e expressões).
-
-2. `NovaScriptLexer.js`, `NovaScriptParser.js`, `NovaScriptVisitor.js`, `NovaScriptListener.js`
-  - **Função:** arquivos gerados automaticamente pelo ANTLR4 a partir da gramática.
-  - **Responsabilidade:** implementam o analisador `léxico`, `sintático` e padrões `visitor/listener`.
-
-<br>
-
-**Módulos Principais**
-
-3. `src/main.js`
-  - **Função:** ponto de entrada principal do interpretador.
-  - **Responsabilidade:** coordena todo o processo de interpretação, desde a leitura do arquivo até a geração de visualizações.
-
-4. `src/AstBuilderVisitor.js`
-  - **Função:** construtor da Árvore Sintática Abstrata (AST).
-  - **Responsabilidade:** percorre a árvore de parse gerada pelo `ANTLR4` e constrói uma AST simplificada.
-
-5. `src/NovaScriptErrorListener.js`
-  - **Função:** tratamento personalizado de erros.
-  - **Responsabilidade:** captura e formata erros léxicos e sintáticos de forma amigável.
-
-6. `src/interpreter/InterpreterVisitor.js`
-  - **Função:** interpretador principal que executa o código.
-  - **Responsabilidade:** percorre a AST e executa as instruções, mantendo o estado das variáveis.
-
-<br>
-
-**Configuração e Dependências**
-
-7. `package.json`
-  - **Função:** configuração do projeto `Node.js`.
-  - **Responsabilidade:** define dependências, scripts e metadados do projeto.
-
-8. `requirements.txt`
-  - **Função:** dependências `Python` para ferramentas auxiliares.
-  - **Responsabilidade:** lista as dependências Python necessárias (`antlr4-tools`).
-
+  6. **Transpilação:** Converte a AST em código Lua equivalente.
 
 <br>
 
@@ -163,59 +230,56 @@ O trabalho é organizado em módulos `JavaScript`:
 
 <br>
 
+## Instalação e Configuração
 
-## 4. Configuração e Instalação
+### Pré-requisitos
 
-Procedimentos de configuração do ambiente para execução do interpretador `NovaScript`.
+- **Node.js** 14 ou superior ([Download](https://nodejs.org/))
+- **Python 3** ([Download](https://www.python.org/))
+- **Git** ([Download](https://git-scm.com/))
+- **Lua** 5.3+ para executar código transpilado ([Download](https://www.lua.org/))
 
-**Pré-requisitos:**
-- **Node.js**
-- **Python3**
+### Instalação
 
-<br>
+#### **Clone o Repositório**
 
-**Instalação:**
-  1. **Clone o repositório:**
 ```bash
 git clone https://github.com/lorena-strobel/NovaScript.git
 cd NovaScript
 ```
 
-  2. **Instale as dependências Node.js:**
+#### **Instale Dependências Node.js**
+
 ```bash
 npm install
 ```
 
-  3. **Configure o ambiente Python:**
+#### **Configure Ambiente Python** (para ferramentas ANTLR4)
 
-  Unix/Linux/macOS:
+**Linux/macOS:**
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-  Windows:
-```text
+**Windows:**
+```powershell
 python -m venv .venv
 .venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-<br>
+#### **Gere os Arquivos do Parser** (se modificar a gramática)
 
-**Geração dos Arquivos Parser:**
-
-Sempre que o arquivo de gramática `NovaScript.g4` for modificado, regenere os arquivos do **Parser**:
 ```bash
 npm run antlr4
 ```
 
-Ou manualmente com `antlr4-tools`:
+Ou manualmente:
 ```bash
 antlr4 -Dlanguage=JavaScript NovaScript.g4 -visitor
 ```
-
 
 <br>
 
@@ -223,53 +287,83 @@ antlr4 -Dlanguage=JavaScript NovaScript.g4 -visitor
 
 <br>
 
+## Uso
 
-## 5. Como Executar o Interpretador
-
-Após configurar o ambiente, execute o interpretador passando o caminho para seu arquivo `NovaScript`:
+### **Sintaxe Básica**
 
 ```bash
-node src/main.js caminho/para/seu_arquivo.ns
+node src/main.js [--interpret|--transpile] <arquivo.ns>
 ```
+
 <br>
 
-**Exemplos:**
+### **Modo 1: Interpretador** (padrão)
+
+Executa o código NovaScript diretamente:
+
 ```bash
 node src/main.js examples/teste.ns
-node src/main.js examples/teste_completo.ns
-node src/main.js examples/teste_io.ns
 ```
-<br>
 
-**Saída do Interpretador:**
+ou explicitamente:
 
-O interpretador produz:
-  1. **Execução do programa:** saída direta do seu código `NovaScript`
-  2. **Arquivo DOT:** `output/nome_do_arquivo.ast.dot` - representação da AST para `Graphviz`
-  3. **Imagem SVG:** `output/nome_do_arquivo.ast.svg` - visualização gráfica da AST
-  4. **JSON da AST:** exibido no terminal para depuração
-
-**Exemplos de Execução:**
 ```bash
-$ node src/main.js examples/teste.ns
+node src/main.js --interpret examples/teste.ns
+```
 
+<p style="">Teste</p>
+
+**Saída:**
+
+```text
 Lendo o arquivo: examples/teste.ns
 Iniciando análise...
-Análise concluída com sucesso.
+Análise sintática concluída.
 Construindo a Árvore Sintática Abstrata (AST)...
 AST construída com sucesso.
 Arquivo .dot da AST salvo em: output/teste.ast.dot
 Gerando imagem da AST...
 Imagem SVG da AST salva em: output/teste.ast.svg
 
-Iniciando execução do programa...
------------------------------------
+Iniciando execução do programa (Interpretador)...
 O resultado da soma é: 30
------------------------------------
 Execução concluída.
 ```
 
+**Arquivos gerados:**
+- `output/teste.ast.dot` - Representação DOT da AST
+- `output/teste.ast.svg` - Visualização gráfica da AST
 
+<br>
+
+### **Modo 2: Transpilador** (NovaScript → Lua)
+
+Converte código NovaScript para Lua:
+
+```bash
+node src/main.js --transpile examples/teste.ns
+```
+
+**Saída:**
+
+```text
+Lendo o arquivo: examples/teste.ns
+...
+Gerando código Lua...
+-- Código Lua gerado pelo NovaScript
+
+local a = 10
+local b = 20
+local resultado = a + b
+print("O resultado da soma é: " .. resultado)
+Arquivo Lua salvo em: output/lua/teste.lua
+```
+
+**Executando código Lua gerado:**
+
+```bash
+lua output/lua/teste.lua
+```
 
 <br>
 
@@ -277,29 +371,47 @@ Execução concluída.
 
 <br>
 
+## Estrutura do Projeto
 
-## 6. Visualização da AST
-
-O `NovaScript` gera automaticamente visualizações da **Árvore Sintática Abstrata** para auxiliar na depuração.
-
-**Arquivos Gerados**
-  - `.ast.dot`: arquivo de descrição da AST no formato **DOT** (`Graphviz`)
-  - `.ast.svg`: imagem vetorial da AST para visualização efetiva
-
-<br>
-
-**Testando com a Gramática**
-
-Para testar rapidamente a gramática no terminal:
-
-```bash
-$ antlr4-parse NovaScript.g4 programa -tree
-let num = 10;
-^D
+```text
+NovaScript/
+├── NovaScript.g4           # Gramática ANTLR4
+├── NovaScriptLexer.js      # Analisador léxico (gerado)
+├── NovaScriptParser.js     # Analisador sintático (gerado)
+├── NovaScriptVisitor.js    # Interface visitor (gerado)
+├── NovaScriptListener.js   # Interface listener (gerado)
+├── package.json            # Configuração Node.js
+├── requirements.txt        # Dependências Python
+├── README.md               # Documentação principal
+│
+├── src/
+│ ├── main.js                       # Orquestrador principal
+│ ├── AstBuilderVisitor.js          # Construtor de AST
+│ ├── NovaScriptErrorListener.js    # Tratamento de erros
+│ │
+│ ├── interpreter/
+│ │ └── InterpreterVisitor.js       # Motor de interpretação
+│ │
+│ └── codegen/
+│ └── LuaCodeGenerator.js           # Transpilador Lua
+│
+├── examples/                       # Exemplos de código .ns
+│ ├── teste.ns
+│ ├── teste_completo.ns
+│ ├── triangulo_pascal.ns
+│ └── ... (17 exemplos)
+│
+├── output/         # Saídas geradas
+│ ├── *.ast.dot     # Arquivos DOT
+│ ├── *.ast.svg     # Visualizações SVG
+│ └── lua/          # Código Lua transpilado
+│ └── *.lua
+│
+└── docs/               # Documentação adicional
+├── Arquitetura_FAQ.md  # Perguntas frequentes
+├── Mapeamento-NovaScript-Lua.md
+└── Roadmap-NovaScript.md
 ```
-> (Use `Ctrl+D` no **Unix/Linux/macOS** ou `Ctrl+Z` no **Windows** para indicar fim da entrada)
-
-
 
 <br>
 
@@ -307,68 +419,105 @@ let num = 10;
 
 <br>
 
+## Referência Rápida da Sintaxe
 
-## 7. Exemplos
+### **Tipos de Dados**
 
-O diretório `examples/` contém arquivos de código `NovaScript` para teste:
+| Tipo | Exemplo | Descrição |
+|------|---------|-----------|
+| Inteiro | `42` | Número inteiro |
+| Decimal | `3.14` | Número com ponto flutuante |
+| String | `"Olá"` | Texto entre aspas duplas |
+| Booleano | `true`, `false` | Resultados de comparações |
 
-**Exemplo Básico (**`teste.ns`**)**
-```novascript
-let a = 10;
-let b = 20;
-let resultado = a + b;
+### **Palavras-Chave**
 
-console.log("O resultado da soma é: " + resultado);
-```
-<br>
+let if else while
+for do prompt console.log
+Number parseInt parseFloat
 
-**Exemplo com Estruturas de Controle (**`teste_completo.ns`**)**
-```novascript
-let i = 0;
-let max = 5;
+text
 
-while (i < max) {
-    if (i == 2) {
-        console.log("Encontrei o 2");
-    } else {
-        console.log("Iteração: " + i);
-    }
-    i++;
-}
-```
-<br>
+### **Operadores por Precedência**
 
-**Exemplo com Entrada e Saída (**`teste_io.ns`**)**
-```novascript
-let nome = prompt("Digite seu nome: ");
-let idade = Number(prompt("Digite sua idade: "));
-
-console.log("Olá, " + nome + "!");
-console.log("Você tem " + idade + " anos.");
-```
-<br>
-
-**Exemplos de Erro**
-
-O projeto também inclui exemplos para testar o tratamento de erros:
-
-- `erro_lexico.ns`: Demonstra erros léxicos
-- `erro_sintatico.ns`: Demonstra erros sintáticos
-- `erro_custom.ns`: Demonstra erros de execução
+| Precedência | Operadores | Tipo |
+|-------------|------------|------|
+| 1 (maior) | `()` | Parênteses |
+| 2 | `!`, `+`, `-` (unários) | Unários |
+| 3 | `*`, `/`, `%` | Multiplicativos |
+| 4 | `+`, `-` | Aditivos |
+| 5 | `>`, `<`, `>=`, `<=` | Relacionais |
+| 6 | `==`, `!=` | Igualdade |
+| 7 | `&&` | AND lógico |
+| 8 (menor) | `||` | OR lógico |
 
 <br>
 
-**Executando os Exemplos**
+---
+
+<br>
+
+## Testando o Sistema
+
+### **Teste 1: Exemplo Básico**
+
 ```bash
-# Exemplo básico
 node src/main.js examples/teste.ns
-
-# Exemplo com estruturas de controle
-node src/main.js examples/teste_completo.ns
-
-# Exemplo com entrada/saída (interativo)
-node src/main.js examples/teste_io.ns
-
-# Testando tratamento de erros
-node src/main.js examples/erro_sintatico.ns
 ```
+
+**Resultado esperado:** `O resultado da soma é: 30`
+
+---
+
+### **Teste 2: Transpilador**
+
+```bash
+node src/main.js --transpile examples/teste.ns
+lua output/lua/teste.lua
+```
+
+**Resultado esperado:** Mesma saída do interpretador
+
+---
+
+### **Teste 3: Tratamento de Erros**
+
+```bash
+node src/main.js examples/erro_lexico.ns
+```
+
+**Resultado esperado:** Mensagem de erro formatada
+
+<br>
+
+---
+
+<br>
+
+## Documentação
+
+### Documentos Disponíveis
+
+- **[Arquitetura_FAQ.md](docs/Arquitetura_FAQ.md)** - Perguntas frequentes sobre arquitetura interna
+- **[Mapeamento-NovaScript-Lua.md](docs/Mapeamento-NovaScript-Lua.md)** - Tabela de conversão de sintaxe
+- **[Roadmap-NovaScript.md](docs/Roadmap-NovaScript.md)** - Planejamento e fases do desenvolvimento
+- **[ERRORS.md](docs/ERRORS.md)** - Guia de erros comuns e soluções
+- **[EXAMPLES.md](docs/EXAMPLES.md)** - Descrição detalhada dos
+
+### 🔗 Links Úteis
+
+- [Documentação ANTLR4](https://github.com/antlr/antlr4/blob/master/doc/index.md)
+- [Tutorial ANTLR4 JavaScript](https://github.com/antlr/antlr4/blob/master/doc/javascript-target.md)
+- [Referência Lua](https://www.lua.org/manual/5.3/)
+
+<br>
+
+---
+
+<br>
+
+<div align="center">
+
+**Desenvolvido por [Lorena Strobel](https://github.com/lorena-strobel) e [Mateus de Souza](https://github.com/mateus-sa)**
+
+</div>
